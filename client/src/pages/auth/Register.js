@@ -8,7 +8,7 @@ import './Auth.css';
 const Register = () => {
   const { register } = useAuth();
   const navigate = useNavigate();
-  const [form, setForm] = useState({ name: '', email: '', password: '', phone: '', gender: 'male', dateOfBirth: '', bloodGroup: '' });
+  const [form, setForm] = useState({ firstName: '', lastName: '', email: '', password: '', phone: '', gender: 'male', dateOfBirth: '', bloodGroup: '' });
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
@@ -34,9 +34,15 @@ const Register = () => {
           <p>Join HealHub today</p>
         </div>
         <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label>Full Name</label>
-            <div className="input-icon"><FiUser /><input className="form-control" placeholder="Full name" value={form.name} onChange={set('name')} required /></div>
+          <div className="auth-form-row">
+            <div className="form-group">
+              <label>First Name</label>
+              <div className="input-icon"><FiUser /><input className="form-control" placeholder="First name" value={form.firstName} onChange={set('firstName')} required /></div>
+            </div>
+            <div className="form-group">
+              <label>Last Name</label>
+              <div className="input-icon"><FiUser /><input className="form-control" placeholder="Last name" value={form.lastName} onChange={set('lastName')} required /></div>
+            </div>
           </div>
           <div className="auth-form-row">
             <div className="form-group">
