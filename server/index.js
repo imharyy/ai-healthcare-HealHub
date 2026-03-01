@@ -22,9 +22,24 @@ connectDB();
 
 // Security
 app.use(helmet({ contentSecurityPolicy: false }));
-app.use(cors({ origin: process.env.FRONTEND_URL || 'http://localhost:3000', credentials: true }));
+
+const allowedOrigins = (process.env.FRONTEND_URL || 'http://localhost:3000')
+  .split(',')
+  .map(o => o.trim());
+
+app.use(cors({
+  origin: function (origin, callback) {
+    // allow requests with no origin (mobile apps, curl, etc.)
+    if (!origin || allowedOrigins.includes(origin)) return callback(null, true);
+    callback(new Error('Not allowed by CORS'));
+  },
+  credentials: true
+}));
 app.use(compression());
-app.use(morgan('dev'));
+app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
+
+// Trust proxy (needed behind Render / reverse proxies)
+app.set('trust proxy', 1);
 
 // Rate Limiting
 const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 500, message: 'Too many requests' });
@@ -36,6 +51,11 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // Static files
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+
+// Health check endpoint (used by Render / monitoring)
+app.get('/api/health', (req, res) => {
+  res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
+});
 
 // API Routes
 app.use('/api/auth', require('./routes/auth'));
@@ -79,5 +99,21 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => console.log(`HealHub server running on port ${PORT}`));
+
+// Graceful shutdown
+const shutdown = (signal) => {
+  console.log(`\n${signal} received. Shutting down gracefully...`);
+  server.close(() => {
+    const mongoose = require('mongoose');
+    mongoose.connection.close(false, () => {
+      console.log('MongoDB connection closed.');
+      process.exit(0);
+    });
+  });
+  // Force exit after 10s
+  setTimeout(() => process.exit(1), 10000);
+};
+process.on('SIGTERM', () => shutdown('SIGTERM'));
+process.on('SIGINT', () => shutdown('SIGINT'));
 
 module.exports = { app, server };
