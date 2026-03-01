@@ -7,6 +7,7 @@ const morgan = require('morgan');
 const compression = require('compression');
 const rateLimit = require('express-rate-limit');
 const path = require('path');
+const fs = require('fs');
 const connectDB = require('./config/db');
 const { initSocket } = require('./config/socket');
 
@@ -81,10 +82,14 @@ app.use('/api/ai-assistant', require('./routes/aiAssistant'));
 app.use('/api/diagnostic', require('./routes/diagnostic'));
 app.use('/api/report-analyzer', require('./routes/reportAnalyzer'));
 
-// Serve React in production
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '../client/build')));
-  app.get('*', (req, res) => res.sendFile(path.join(__dirname, '../client/build/index.html')));
+// Serve React client — auto-detect if build folder exists
+const buildPath = path.join(__dirname, '../client/build');
+if (fs.existsSync(path.join(buildPath, 'index.html'))) {
+  console.log('Serving React client from', buildPath);
+  app.use(express.static(buildPath));
+  app.get('*', (req, res) => res.sendFile(path.join(buildPath, 'index.html')));
+} else {
+  console.log('React build not found at', buildPath, '— run "cd client && npm run build" first');
 }
 
 // Error handling
