@@ -1,7 +1,9 @@
 import axios from 'axios';
 
+const API_URL = process.env.REACT_APP_API_URL || (process.env.NODE_ENV === 'production' ? '' : 'http://localhost:5000');
+
 const api = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:5000',
+  baseURL: API_URL,
   timeout: 30000,
 });
 
@@ -23,7 +25,7 @@ api.interceptors.response.use(
       if (refreshToken) {
         try {
           const { data } = await axios.post(
-            `${process.env.REACT_APP_API_URL || 'http://localhost:5000'}/api/auth/refresh-token`,
+            `${API_URL}/api/auth/refresh-token`,
             { refreshToken }
           );
           const d = data.data || data;

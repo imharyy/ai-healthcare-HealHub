@@ -16,7 +16,7 @@ export const SocketProvider = ({ children }) => {
       if (socketRef.current) { socketRef.current.disconnect(); socketRef.current = null; setConnected(false); }
       return;
     }
-    const socket = io(process.env.REACT_APP_API_URL || 'http://localhost:5000', {
+    const socket = io(process.env.REACT_APP_API_URL || (process.env.NODE_ENV === 'production' ? window.location.origin : 'http://localhost:5000'), {
       auth: { token: localStorage.getItem('token') }
     });
     socketRef.current = socket;

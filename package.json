@@ -11,7 +11,8 @@
     "install:all": "npm install && cd client && npm install",
     "dev": "concurrently \"npm run server:dev\" \"npm run client\"",
     "start": "node server/index.js",
-    "seed": "node server/seed.js"
+    "seed": "node server/seed.js",
+    "render-build": "npm install && cd client && npm install && npm run build"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
