@@ -43,6 +43,5 @@ const telemedicineSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 telemedicineSchema.index({ appointment: 1 });
-telemedicineSchema.index({ roomId: 1 });
 
 module.exports = mongoose.model('Telemedicine', telemedicineSchema);

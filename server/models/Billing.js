@@ -47,7 +47,6 @@ const billingSchema = new mongoose.Schema({
 
 billingSchema.index({ patient: 1, date: -1 });
 billingSchema.index({ hospital: 1, date: -1 });
-billingSchema.index({ invoiceNumber: 1 });
 
 // Generate invoice number
 billingSchema.pre('save', async function(next) {

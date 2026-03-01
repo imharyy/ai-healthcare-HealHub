@@ -58,6 +58,5 @@ const hospitalSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 hospitalSchema.index({ 'address.coordinates': '2dsphere' });
-hospitalSchema.index({ code: 1 });
 
 module.exports = mongoose.model('Hospital', hospitalSchema);

@@ -81,7 +81,6 @@ const userSchema = new mongoose.Schema({
   tenant: { type: mongoose.Schema.Types.ObjectId, ref: 'Hospital' }
 }, { timestamps: true });
 
-userSchema.index({ email: 1 });
 userSchema.index({ phone: 1 });
 userSchema.index({ role: 1 });
 userSchema.index({ hospital: 1 });
