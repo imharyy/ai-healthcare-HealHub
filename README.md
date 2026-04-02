@@ -3,10 +3,14 @@
 A full-stack healthcare management platform for hospitals and clinics, built with React, Node.js, Express, MongoDB, and Socket.IO.
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 HealHub supports multiple roles ( admin, doctor, receptionist, and patient) and includes modules for appointments, queueing, telemedicine, medical records, diagnostics, billing, notifications, and AI-assisted workflows.
 =======
 HealHub supports multiple roles (super admin, doctor, receptionist, and patient) and includes modules for appointments, queueing, telemedicine, medical records, diagnostics, billing, notifications, and AI-assisted workflows.
 >>>>>>> 112480b (readme)
+=======
+HealHub supports multiple roles ( admin, doctor, receptionist, and patient) and includes modules for appointments, queueing, telemedicine, medical records, diagnostics, billing, notifications, and AI-assisted workflows.
+>>>>>>> b9b86cd (documents)
 
 ## Tech Stack
 
