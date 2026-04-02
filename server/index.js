@@ -13,13 +13,16 @@ const { initSocket } = require('./config/socket');
 
 const app = express();
 const server = http.createServer(app);
+const isTestEnv = process.env.NODE_ENV === 'test';
 
 // Initialize Socket.IO
 const io = initSocket(server);
 app.set('io', io);
 
 // Connect Database
-connectDB();
+if (!isTestEnv) {
+  connectDB();
+}
 
 // Security
 app.use(helmet({ contentSecurityPolicy: false }));
@@ -103,7 +106,9 @@ app.use((err, req, res, next) => {
 });
 
 const PORT = process.env.PORT || 5000;
-server.listen(PORT, () => console.log(`HealHub server running on port ${PORT}`));
+if (!isTestEnv) {
+  server.listen(PORT, () => console.log(`HealHub server running on port ${PORT}`));
+}
 
 // Graceful shutdown
 const shutdown = (signal) => {
@@ -118,7 +123,9 @@ const shutdown = (signal) => {
   // Force exit after 10s
   setTimeout(() => process.exit(1), 10000);
 };
-process.on('SIGTERM', () => shutdown('SIGTERM'));
-process.on('SIGINT', () => shutdown('SIGINT'));
+if (!isTestEnv) {
+  process.on('SIGTERM', () => shutdown('SIGTERM'));
+  process.on('SIGINT', () => shutdown('SIGINT'));
+}
 
 module.exports = { app, server };
